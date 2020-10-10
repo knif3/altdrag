@@ -31,6 +31,7 @@ GUID my_IID_IAudioEndpointVolume = {0x5CDF2C82,0x841E,0x4546,{0x97,0x22,0x0C,0xF
 // App
 #define APP_NAME L"AltDrag"
 #define AERO_THRESHOLD 5
+#define WINDOW_SHIFT_CORRECTION 8
 
 // Boring stuff
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
@@ -427,13 +428,13 @@ void MoveSnap(int *posx, int *posy, int wndwidth, int wndheight) {
       else if (snapinside_cond && *posx-thresholdx < snapwnd.left && snapwnd.left < *posx+thresholdx) {
         // The left edge of the dragged window will snap to this window's left edge
         stuckx = 1;
-        stickx = snapwnd.left;
+        stickx = snapwnd.left-WINDOW_SHIFT_CORRECTION;
         thresholdx = snapwnd.left-*posx;
       }
       else if (*posx+wndwidth-thresholdx < snapwnd.left && snapwnd.left < *posx+wndwidth+thresholdx) {
         // The right edge of the dragged window will snap to this window's left edge
         stuckx = 1;
-        stickx = snapwnd.left-wndwidth;
+        stickx = snapwnd.left-wndwidth+WINDOW_SHIFT_CORRECTION;
         thresholdx = snapwnd.left-(*posx+wndwidth);
       }
     }
@@ -451,7 +452,7 @@ void MoveSnap(int *posx, int *posy, int wndwidth, int wndheight) {
       else if (snapinside_cond && *posy+wndheight-thresholdy < snapwnd.bottom && snapwnd.bottom < *posy+wndheight+thresholdy) {
         // The bottom edge of the dragged window will snap to this window's bottom edge
         stucky = 1;
-        sticky = snapwnd.bottom-wndheight;
+        sticky = snapwnd.bottom-wndheight+WINDOW_SHIFT_CORRECTION;
         thresholdy = snapwnd.bottom-(*posy+wndheight);
       }
       else if (snapinside_cond && *posy-thresholdy < snapwnd.top && snapwnd.top < *posy+thresholdy) {
@@ -520,13 +521,13 @@ void ResizeSnap(int *posx, int *posy, int *wndwidth, int *wndheight) {
       else if (snapinside_cond && state.resize.x == RESIZE_LEFT && *posx-thresholdx < snapwnd.left && snapwnd.left < *posx+thresholdx) {
         // The left edge of the dragged window will snap to this window's left edge
         stuckleft = 1;
-        stickleft = snapwnd.left;
+        stickleft = snapwnd.left-WINDOW_SHIFT_CORRECTION;
         thresholdx = snapwnd.left-*posx;
       }
       else if (state.resize.x == RESIZE_RIGHT && *posx+*wndwidth-thresholdx < snapwnd.left && snapwnd.left < *posx+*wndwidth+thresholdx) {
         // The right edge of the dragged window will snap to this window's left edge
         stuckright = 1;
-        stickright = snapwnd.left;
+        stickright = snapwnd.left+WINDOW_SHIFT_CORRECTION;
         thresholdx = snapwnd.left-(*posx+*wndwidth);
       }
     }
@@ -544,7 +545,7 @@ void ResizeSnap(int *posx, int *posy, int *wndwidth, int *wndheight) {
       else if (snapinside_cond && state.resize.y == RESIZE_BOTTOM && *posy+*wndheight-thresholdy < snapwnd.bottom && snapwnd.bottom < *posy+*wndheight+thresholdy) {
         // The bottom edge of the dragged window will snap to this window's bottom edge
         stuckbottom = 1;
-        stickbottom = snapwnd.bottom;
+        stickbottom = snapwnd.bottom+WINDOW_SHIFT_CORRECTION;
         thresholdy = snapwnd.bottom-(*posy+*wndheight);
       }
       else if (snapinside_cond && state.resize.y == RESIZE_TOP && *posy-thresholdy < snapwnd.top && snapwnd.top < *posy+thresholdy) {
