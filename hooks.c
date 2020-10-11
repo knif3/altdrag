@@ -31,7 +31,7 @@ GUID my_IID_IAudioEndpointVolume = {0x5CDF2C82,0x841E,0x4546,{0x97,0x22,0x0C,0xF
 // App
 #define APP_NAME L"AltDrag"
 #define AERO_THRESHOLD 5
-#define WINDOW_SHIFT_CORRECTION 8
+#define WINDOW_SHIFT_CORRECTION 7
 
 // Boring stuff
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
@@ -362,6 +362,7 @@ void Enum() {
   HWND taskbar = FindWindow(L"Shell_TrayWnd", NULL);
   RECT wnd;
   if (taskbar != NULL && GetWindowRect(taskbar,&wnd) != 0) {
+    wnd.top += WINDOW_SHIFT_CORRECTION;
     wnds[numwnds++] = wnd;
   }
   if (sharedstate.snap >= 2) {
@@ -422,7 +423,7 @@ void MoveSnap(int *posx, int *posy, int wndwidth, int wndheight) {
       else if (snapinside_cond && *posx+wndwidth-thresholdx < snapwnd.right && snapwnd.right < *posx+wndwidth+thresholdx) {
         // The right edge of the dragged window will snap to this window's right edge
         stuckx = 1;
-        stickx = snapwnd.right-wndwidth;
+        stickx = snapwnd.right-wndwidth+WINDOW_SHIFT_CORRECTION;
         thresholdx = snapwnd.right-(*posx+wndwidth);
       }
       else if (snapinside_cond && *posx-thresholdx < snapwnd.left && snapwnd.left < *posx+thresholdx) {
